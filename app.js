@@ -342,4 +342,34 @@ app.get('/api/qris/create', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3015;
+
+// ================= CHECK TOKEN =================
+app.get('/auth/check/token', async (req, res) => {
+    try {
+        const { token } = req.query;
+
+        if (!token) {
+            return res.status(400).json({
+                success: false,
+                error: 'token wajib diisi'
+            });
+        }
+
+        const data = await sdk.getMe(token);
+
+        return res.json({
+            success: true,
+            message: 'Access token valid',
+            data
+        });
+    } catch (e) {
+        const status = e.response?.status;
+
+        return res.status(status === 401 ? 401 : 400).json({
+            success: false,
+            error: e.response?.data || e.message
+        });
+    }
+});
+
 app.listen(PORT, () => console.log(`SANZ CLOUD PLATFORM listening on port ${PORT}`));

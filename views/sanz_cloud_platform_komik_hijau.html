@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SANZ CLOUD PLATFORM</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Luckiest+Guy&display=swap" rel="stylesheet">
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            fontFamily: {
+                sans: ['Inter', 'sans-serif'],
+                comic: ['Luckiest Guy', 'cursive']
+            },
+            colors: {
+                comicgreen: {
+                    50:'#effff4',100:'#d7ffe5',200:'#a9fac2',300:'#69ee96',
+                    400:'#2fda69',500:'#16b955',600:'#0d9644',700:'#087536',
+                    800:'#075e2d',900:'#064c27',950:'#032a16'
+                }
+            },
+            boxShadow: {
+                comic: '7px 7px 0 rgba(0,0,0,.28)',
+                comicSm: '4px 4px 0 rgba(0,0,0,.25)'
+            }
+        }
+    }
+}
+</script>
+
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    background:
+        radial-gradient(circle at 12% 10%,rgba(74,222,128,.18),transparent 28%),
+        radial-gradient(circle at 88% 8%,rgba(16,185,129,.16),transparent 25%),
+        radial-gradient(circle at 50% 85%,rgba(34,197,94,.12),transparent 30%),
+        linear-gradient(135deg,#06160d 0%,#092318 45%,#031109 100%);
+    color:#ecfdf5;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+body:before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:.18;
+    background-image:radial-gradient(#fff 1px,transparent 1px);
+    background-size:18px 18px;
+    mask-image:linear-gradient(to bottom,black,transparent 85%);
+}
+.navbar{
+    background:rgba(3,20,11,.84);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border-bottom:3px solid #061b10;
+}
+.comic-outline{
+    border:3px solid #03150b;
+}
+.hero-logo{
+    box-shadow:0 0 0 5px #d1fae5,0 0 0 8px #062716,12px 12px 0 rgba(0,0,0,.22);
+}
+.comic-title{
+    font-family:'Luckiest Guy',cursive;
+    letter-spacing:.03em;
+    text-shadow:4px 4px 0 #032a16;
+}
+.green-gradient{
+    background:linear-gradient(135deg,#ecfdf5 0%,#86efac 38%,#22c55e 72%,#bbf7d0 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+.card{
+    background:linear-gradient(145deg,rgba(16,185,129,.18),rgba(3,27,15,.96) 40%,rgba(4,42,23,.92));
+    border:3px solid #03150b;
+    box-shadow:7px 7px 0 rgba(0,0,0,.30),inset 0 1px rgba(255,255,255,.08);
+    transition:.2s ease;
+}
+.card:hover{
+    transform:translate(-2px,-2px);
+    box-shadow:10px 10px 0 rgba(0,0,0,.28),0 0 0 2px rgba(74,222,128,.14);
+}
+.badge{
+    border:2px solid #05321d;
+    background:#0c5d30;
+    color:#bbf7d0;
+    box-shadow:3px 3px 0 rgba(0,0,0,.2);
+}
+.icon{
+    width:48px;height:48px;border-radius:15px;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(145deg,#4ade80,#15803d);
+    color:#04230f;
+    border:3px solid #03150b;
+    box-shadow:4px 4px 0 rgba(0,0,0,.24);
+}
+.endpoint{
+    background:#01160b;
+    border:3px dashed #166534;
+    color:#bbf7d0;
+    border-radius:15px;
+    padding:12px 14px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:.72rem;
+    overflow-x:auto;
+    white-space:nowrap;
+}
+.method{
+    display:inline-flex;align-items:center;
+    padding:3px 8px;border-radius:8px;
+    background:#166534;color:#dcfce7;
+    font-size:.68rem;font-weight:900;
+    margin-right:8px;
+    border:2px solid #052511;
+}
+.action{
+    width:100%;
+    border:3px solid #03150b;
+    border-radius:14px;
+    padding:12px 15px;
+    color:#02210f;
+    font-weight:900;
+    background:linear-gradient(135deg,#86efac,#22c55e 55%,#15803d);
+    box-shadow:5px 5px 0 rgba(0,0,0,.28);
+    transition:.15s ease;
+}
+.action:hover{transform:translate(-1px,-1px);box-shadow:7px 7px 0 rgba(0,0,0,.25)}
+.action:active{transform:translate(3px,3px);box-shadow:2px 2px 0 rgba(0,0,0,.25)}
+.panel{
+    display:none;
+    margin-top:14px;
+    padding:15px;
+    border-radius:16px;
+    background:rgba(1,19,9,.8);
+    border:3px solid #0a4a25;
+}
+.panel.open{display:block;animation:pop .18s ease}
+@keyframes pop{from{opacity:0;transform:translateY(-5px) scale(.99)}to{opacity:1;transform:none}}
+.input{
+    width:100%;
+    background:#03170c;
+    border:2px solid #14532d;
+    border-radius:12px;
+    padding:11px 13px;
+    color:#ecfdf5;
+    outline:none;
+    transition:.15s;
+}
+.input:focus{
+    border-color:#4ade80;
+    box-shadow:0 0 0 3px rgba(74,222,128,.12);
+}
+.label{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:#86efac;font-weight:800;margin:0 0 7px 2px}
+.result{
+    display:none;
+    margin-top:12px;
+    background:#010c06;
+    border:3px solid #0b4222;
+    border-radius:13px;
+    padding:12px;
+    min-height:55px;
+    max-height:280px;
+    overflow:auto;
+    white-space:pre-wrap;
+    word-break:break-word;
+    font:500 .72rem/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;
+    color:#86efac;
+}
+.result.error{color:#fca5a5;border-color:#7f1d1d}
+.live{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:7px 11px;border-radius:999px;
+    background:#064e2a;border:2px solid #166534;
+    color:#bbf7d0;font-size:.72rem;font-weight:900;
+}
+.dot{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 12px #4ade80;animation:pulse 1.8s infinite}
+@keyframes pulse{50%{opacity:.35;transform:scale(.75)}}
+.toast{
+    position:fixed;left:50%;bottom:22px;z-index:1000;
+    transform:translateX(-50%) translateY(25px) scale(.96);
+    opacity:0;pointer-events:none;
+    background:#d1fae5;color:#04230f;
+    border:3px solid #03150b;
+    box-shadow:6px 6px 0 rgba(0,0,0,.25);
+    border-radius:14px;padding:11px 15px;
+    font-weight:900;font-size:.78rem;
+    transition:.2s ease;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
+.small-note{color:#6ee7a0;font-size:.7rem;line-height:1.5}
+footer{border-top:3px solid #03150b;background:rgba(1,12,6,.55)}
+@media(max-width:640px){
+    .hero-logo{box-shadow:0 0 0 4px #d1fae5,0 0 0 7px #062716,8px 8px 0 rgba(0,0,0,.2)}
+    .card{box-shadow:5px 5px 0 rgba(0,0,0,.3)}
+}
+</style>
+</head>
+
+<body>
+<nav class="navbar fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-[70px] flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <img src="/logo.png" alt="SANZ CLOUD" class="w-11 h-11 rounded-full object-cover hero-logo">
+            <div>
+                <div class="font-black text-white text-sm sm:text-base">SANZ CLOUD</div>
+                <div class="text-[10px] uppercase tracking-[.2em] text-green-300">Platform</div>
+            </div>
+        </div>
+        <div class="flex items-center gap-2 sm:gap-3">
+            <div class="live"><span class="dot"></span> LIVE</div>
+            <a href="https://t.me/SANZCVPUBLIKK" target="_blank"
+               class="w-10 h-10 rounded-xl bg-green-950 border-[3px] border-green-900 flex items-center justify-center text-green-300 hover:text-white">
+                <i class="fa-brands fa-telegram"></i>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<header class="max-w-6xl mx-auto px-4 sm:px-6 pt-28 sm:pt-32 pb-10">
+    <div class="text-center">
+        <div class="inline-block relative mb-5">
+            <div class="absolute -inset-4 rounded-full bg-green-400/10 blur-2xl"></div>
+            <img src="/logo.png" alt="SANZ CLOUD PLATFORM"
+                 class="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover hero-logo">
+        </div>
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full badge text-[11px] font-black mb-4">
+            <i class="fa-solid fa-bolt"></i> PAYMENT GATEWAY EXPLORER
+        </div>
+        <h1 class="comic-title text-4xl sm:text-6xl leading-none green-gradient">
+            SANZ CLOUD
+        </h1>
+        <p class="mt-3 text-green-100/80 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+            Interface komik untuk mencoba endpoint autentikasi, QRIS, token, dan riwayat transaksi.
+        </p>
+        <p class="mt-2 small-note">
+            Klik <b>Buka Form</b> pada layanan yang dibutuhkan. Form input tidak akan muncul sebelum dibuka.
+        </p>
+    </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 sm:px-6 pb-20">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        <!-- AUTH OTP -->
+        <section class="card rounded-3xl p-5">
+            <div class="flex items-center gap-3">
+                <div class="icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h2 class="font-black text-white text-base">Auth OTP</h2>
+                        <span class="badge text-[10px] px-2 py-1 rounded-full font-black">STEP 1</span>
+                    </div>
+                    <p class="text-[11px] text-green-200/55 mt-1">Kirim kode OTP via email / nomor telepon</p>
+                </div>
+            </div>
+
+            <div class="endpoint mt-4"><span class="method">GET</span><span id="urlAuthOtp">loading...</span></div>
+            <button class="action mt-4" type="button" onclick="togglePanel('panelOtp', this)">
+                <i class="fa-solid fa-circle-plus mr-2"></i> Buka Form OTP
+            </button>
+
+            <div id="panelOtp" class="panel">
+                <form id="formAuthOtp" class="space-y-3">
+                    <div>
+                        <label class="label">Email / Nomor Telepon</label>
+                        <input id="paramAuthOtpCredential" class="input" type="text" placeholder="user@gmail.com atau 628xxx">
+                    </div>
+                    <button type="submit" class="action">
+                        <i class="fa-solid fa-paper-plane mr-2"></i> Request OTP
+                    </button>
+                </form>
+                <pre id="resAuthOtp" class="result"></pre>
+            </div>
+        </section>
+
+        <!-- VERIFY OTP -->
+        <section class="card rounded-3xl p-5">
+            <div class="flex items-center gap-3">
+                <div class="icon"><i class="fa-solid fa-key"></i></div>
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h2 class="font-black text-white text-base">Verify OTP</h2>
+                        <span class="badge text-[10px] px-2 py-1 rounded-full font-black">STEP 2</span>
+                    </div>
+                    <p class="text-[11px] text-green-200/55 mt-1">Verifikasi OTP untuk mendapatkan access token</p>
+                </div>
+            </div>
+
+            <div class="endpoint mt-4"><span class="method">GET</span><span id="urlAuthVerify">loading...</span></div>
+            <button class="action mt-4" type="button" onclick="togglePanel('panelVerify', this)">
+                <i class="fa-solid fa-circle-plus mr-2"></i> Buka Form Verifikasi
+            </button>
+
+            <div id="panelVerify" class="panel">
+                <form id="formAuthVerify" class="space-y-3">
+                    <div>
+                        <label class="label">Kode OTP</label>
+                        <input id="paramAuthVerifyOtp" class="input" type="text" placeholder="1234">
+                    </div>
+                    <div>
+                        <label class="label">OTP Token</label>
+                        <input id="paramAuthVerifyOtpToken" class="input" type="text" placeholder="token_dari_request_otp">
+                    </div>
+                    <button type="submit" class="action">
+                        <i class="fa-solid fa-check-double mr-2"></i> Verifikasi OTP
+                    </button>
+                </form>
+                <pre id="resAuthVerify" class="result"></pre>
+            </div>
+        </section>
+
+        <!-- QRIS -->
+        <section class="card rounded-3xl p-5">
+            <div class="flex items-center gap-3">
+                <div class="icon"><i class="fa-solid fa-qrcode"></i></div>
+                <div class="flex-1">
+                    <h2 class="font-black text-white text-base">Create QRIS Payment</h2>
+                    <p class="text-[11px] text-green-200/55 mt-1">Generate QRIS dinamis dari static QR</p>
+                </div>
+            </div>
+
+            <div class="endpoint mt-4"><span class="method">GET</span><span id="urlQrisCreate">loading...</span></div>
+            <button class="action mt-4" type="button" onclick="togglePanel('panelQris', this)">
+                <i class="fa-solid fa-circle-plus mr-2"></i> Buka Form QRIS
+            </button>
+
+            <div id="panelQris" class="panel">
+                <form id="formQrisCreate" class="space-y-3">
+                    <div>
+                        <label class="label">Amount</label>
+                        <input id="paramQrisAmount" class="input" type="number" placeholder="50000">
+                    </div>
+                    <div>
+                        <label class="label">Static QR</label>
+                        <input id="paramQrisStaticQr" class="input" type="text" placeholder="000201010212...">
+                    </div>
+                    <button type="submit" class="action">
+                        <i class="fa-solid fa-qrcode mr-2"></i> Buat QRIS
+                    </button>
+                </form>
+                <pre id="resQrisCreate" class="result"></pre>
+            </div>
+        </section>
+
+        <!-- HISTORY -->
+        <section class="card rounded-3xl p-5">
+            <div class="flex items-center gap-3">
+                <div class="icon"><i class="fa-solid fa-list-check"></i></div>
+                <div class="flex-1">
+                    <h2 class="font-black text-white text-base">Transaction History</h2>
+                    <p class="text-[11px] text-green-200/55 mt-1">Riwayat transaksi 7 hari terakhir</p>
+                </div>
+            </div>
+
+            <div class="endpoint mt-4"><span class="method">GET</span><span id="urlHistory">loading...</span></div>
+            <button class="action mt-4" type="button" onclick="togglePanel('panelHistory', this)">
+                <i class="fa-solid fa-circle-plus mr-2"></i> Buka Form Riwayat
+            </button>
+
+            <div id="panelHistory" class="panel">
+                <form id="formHistory" class="space-y-3">
+                    <div>
+                        <label class="label">Access Token</label>
+                        <input id="paramHistoryToken" class="input" type="text" placeholder="access_token_anda">
+                    </div>
+                    <div>
+                        <label class="label">Tanggal Mulai <span class="normal-case opacity-60">(opsional)</span></label>
+                        <input id="paramHistoryStartTime" class="input" type="text" placeholder="YYYY-MM-DD">
+                    </div>
+                    <button type="submit" class="action">
+                        <i class="fa-solid fa-clock-rotate-left mr-2"></i> Lihat Riwayat
+                    </button>
+                </form>
+                <pre id="resHistory" class="result"></pre>
+            </div>
+        </section>
+
+        <!-- REFRESH -->
+        <section class="card rounded-3xl p-5">
+            <div class="flex items-center gap-3">
+                <div class="icon"><i class="fa-solid fa-rotate"></i></div>
+                <div class="flex-1">
+                    <h2 class="font-black text-white text-base">Refresh Token</h2>
+                    <p class="text-[11px] text-green-200/55 mt-1">Dapatkan access token baru</p>
+                </div>
+            </div>
+
+            <div class="endpoint mt-4"><span class="method">GET</span><span id="urlRefreshToken">loading...</span></div>
+            <button class="action mt-4" type="button" onclick="togglePanel('panelRefresh', this)">
+                <i class="fa-solid fa-circle-plus mr-2"></i> Buka Form Refresh
+            </button>
+
+            <div id="panelRefresh" class="panel">
+                <form id="formRefreshToken" class="space-y-3">
+                    <div>
+                        <label class="label">Refresh Token</label>
+                        <input id="paramRefreshToken" class="input" type="text" placeholder="refresh_token_anda">
+                    </div>
+                    <button type="submit" class="action">
+                        <i class="fa-solid fa-arrows-rotate mr-2"></i> Refresh Token
+                    </button>
+                </form>
+                <pre id="resRefreshToken" class="result"></pre>
+            </div>
+        </section>
+
+        <!-- CHECK TOKEN -->
+        <section class="card rounded-3xl p-5">
+            <div class="flex items-center gap-3">
+                <div class="icon"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="flex-1">
+                    <h2 class="font-black text-white text-base">Validate Token</h2>
+                    <p class="text-[11px] text-green-200/55 mt-1">Cek apakah access token masih valid</p>
+                </div>
+            </div>
+
+            <div class="endpoint mt-4"><span class="method">GET</span><span id="urlCheckToken">loading...</span></div>
+            <button class="action mt-4" type="button" onclick="togglePanel('panelCheck', this)">
+                <i class="fa-solid fa-circle-plus mr-2"></i> Buka Form Validasi
+            </button>
+
+            <div id="panelCheck" class="panel">
+                <form id="formCheckToken" class="space-y-3">
+                    <div>
+                        <label class="label">Access Token</label>
+                        <input id="paramCheckToken" class="input" type="text" placeholder="access_token_anda">
+                    </div>
+                    <button type="submit" class="action">
+                        <i class="fa-solid fa-shield-halved mr-2"></i> Cek Validitas
+                    </button>
+                </form>
+                <pre id="resCheckToken" class="result"></pre>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<footer>
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="flex items-center gap-3">
+            <img src="/logo.png" alt="SANZ CLOUD" class="w-10 h-10 rounded-full object-cover comic-outline">
+            <div>
+                <p class="font-black text-green-100 text-sm">SANZ CLOUD PLATFORM</p>
+                <p class="text-[10px] text-green-300/45">© 2026 · Powerful. Secure. Scalable.</p>
+            </div>
+        </div>
+        <a href="https://t.me/SANZCVPUBLIKK" target="_blank" class="text-green-300 text-xl hover:text-white">
+            <i class="fa-brands fa-telegram"></i>
+        </a>
+    </div>
+</footer>
+
+<div id="toast" class="toast">
+    <i class="fa-solid fa-check mr-2"></i><span id="toastMsg">Berhasil</span>
+</div>
+
+<script>
+const BASE_URL = window.location.origin;
+let toastTimer;
+
+function getVal(id){
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : '';
+}
+
+function showToast(message){
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>toast.classList.remove('show'),2200);
+}
+
+function togglePanel(id, button){
+    const panel = document.getElementById(id);
+    const open = panel.classList.toggle('open');
+    button.innerHTML = open
+        ? '<i class="fa-solid fa-circle-minus mr-2"></i> Tutup Form'
+        : '<i class="fa-solid fa-circle-plus mr-2"></i> Buka Form';
+}
+
+async function copyText(text){
+    try{
+        await navigator.clipboard.writeText(text);
+        showToast('Endpoint berhasil disalin');
+    }catch{
+        const ta=document.createElement('textarea');
+        ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+        document.body.appendChild(ta);ta.select();
+        try{document.execCommand('copy');showToast('Endpoint berhasil disalin')}
+        catch{showToast('Gagal menyalin endpoint')}
+        ta.remove();
+    }
+}
+
+document.addEventListener('click', e=>{
+    const box=e.target.closest('.endpoint');
+    if(!box || e.target.closest('button')) return;
+    copyText(box.innerText.replace(/^GET\\s*/,'').trim());
+});
+
+function updateAllUrls(){
+    const otpCred=getVal('paramAuthOtpCredential');
+    const otpParam=otpCred.includes('@')?'email':'phone';
+    document.getElementById('urlAuthOtp').textContent =
+        `${BASE_URL}/auth/otp${otpCred?`?${otpParam}=${encodeURIComponent(otpCred)}`:`?{email_or_phone}`}`;
+
+    const otp=getVal('paramAuthVerifyOtp')||'{otp}';
+    const token=getVal('paramAuthVerifyOtpToken')||'{otp_token}';
+    document.getElementById('urlAuthVerify').textContent =
+        `${BASE_URL}/auth/verify?otp=${encodeURIComponent(otp)}&otp_token=${encodeURIComponent(token)}`;
+
+    const amount=getVal('paramQrisAmount')||'{amount}';
+    const staticQr=getVal('paramQrisStaticQr')||'{static_qr}';
+    document.getElementById('urlQrisCreate').textContent =
+        `${BASE_URL}/api/qris/create?amount=${encodeURIComponent(amount)}&static_qr=${encodeURIComponent(staticQr)}`;
+
+    const histToken=getVal('paramHistoryToken')||'{token}';
+    const start=getVal('paramHistoryStartTime');
+    document.getElementById('urlHistory').textContent =
+        `${BASE_URL}/api/history?token=${encodeURIComponent(histToken)}${start?`&start_time=${encodeURIComponent(start)}`:''}`;
+
+    const refresh=getVal('paramRefreshToken')||'{refresh_token}';
+    document.getElementById('urlRefreshToken').textContent =
+        `${BASE_URL}/auth/refresh/token?refresh_token=${encodeURIComponent(refresh)}`;
+
+    const check=getVal('paramCheckToken')||'{token}';
+    document.getElementById('urlCheckToken').textContent =
+        `${BASE_URL}/auth/check/token?token=${encodeURIComponent(check)}`;
+}
+
+document.querySelectorAll('input').forEach(el=>{
+    el.addEventListener('input',updateAllUrls);
+    el.addEventListener('change',updateAllUrls);
+});
+
+async function fetchGET(url,params={}){
+    const clean={...params};
+    Object.keys(clean).forEach(k=>{
+        if(clean[k]===''||clean[k]===null||clean[k]===undefined) delete clean[k];
+    });
+    const query=new URLSearchParams(clean).toString();
+    const fullUrl=query?`${url}?${query}`:url;
+    try{
+        const res=await fetch(fullUrl,{method:'GET',headers:{'Accept':'application/json'}});
+        const text=await res.text();
+        let data;
+        try{data=JSON.parse(text)}catch{data={success:res.ok,message:text||res.statusText,status:res.status}};
+        return data;
+    }catch(error){
+        return {
+            success:false,
+            error_type:'Network / CORS Error',
+            message:error.message,
+            attempted_url:fullUrl,
+            hint:'Pastikan backend berjalan dan request GET diizinkan.'
+        };
+    }
+}
+
+async function executeApi(endpoint,params,resultId){
+    const box=document.getElementById(resultId);
+    box.style.display='block';
+    box.className='result';
+    box.textContent='// Processing request...';
+
+    const data=await fetchGET(endpoint,params);
+    if(data && data.error_type==='Network / CORS Error') box.classList.add('error');
+    box.textContent=JSON.stringify(data,null,2);
+}
+
+document.getElementById('formAuthOtp').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const credential=getVal('paramAuthOtpCredential');
+    const box=document.getElementById('resAuthOtp');
+    if(!credential){
+        box.style.display='block';box.className='result error';
+        box.textContent=JSON.stringify({success:false,error:'Email atau nomor telepon wajib diisi'},null,2);
+        return;
+    }
+    const params=credential.includes('@')?{email:credential}:{phone:credential};
+    await executeApi('/auth/otp',params,'resAuthOtp');
+});
+
+document.getElementById('formAuthVerify').addEventListener('submit',async e=>{
+    e.preventDefault();
+    await executeApi('/auth/verify',{
+        otp:getVal('paramAuthVerifyOtp'),
+        otp_token:getVal('paramAuthVerifyOtpToken')
+    },'resAuthVerify');
+});
+
+document.getElementById('formQrisCreate').addEventListener('submit',async e=>{
+    e.preventDefault();
+    await executeApi('/api/qris/create',{
+        amount:getVal('paramQrisAmount'),
+        static_qr:getVal('paramQrisStaticQr')
+    },'resQrisCreate');
+});
+
+document.getElementById('formHistory').addEventListener('submit',async e=>{
+    e.preventDefault();
+    await executeApi('/api/history',{
+        token:getVal('paramHistoryToken'),
+        start_time:getVal('paramHistoryStartTime')
+    },'resHistory');
+});
+
+document.getElementById('formRefreshToken').addEventListener('submit',async e=>{
+    e.preventDefault();
+    await executeApi('/auth/refresh/token',{
+        refresh_token:getVal('paramRefreshToken')
+    },'resRefreshToken');
+});
+
+document.getElementById('formCheckToken').addEventListener('submit',async e=>{
+    e.preventDefault();
+    await executeApi('/auth/check/token',{
+        token:getVal('paramCheckToken')
+    },'resCheckToken');
+});
+
+updateAllUrls();
+</script>
+</body>
+</html>
